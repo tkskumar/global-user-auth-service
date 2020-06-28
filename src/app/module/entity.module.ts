@@ -1,21 +1,22 @@
 import { Module, Type } from '@nestjs/common';
-import ItemsService from './services/item.servie';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import ContactEntity from './entity/contact.entity';
 import { DatabaseModule } from '../../database/database.module';
 import * as fs from 'fs';
 import * as path from 'path';
+import User  from './entities/user.entity';
+import { UserService } from './services/user.service';
 
-export const ALL_ENTITIES = fs.readdirSync(path.join(path.dirname(__filename), 'entity'))
-  .map((file) => require(`./entity/${file}`).default as Type<any>);
+export const ALL_ENTITIES = fs.readdirSync(path.join(path.dirname(__filename), 'entities'))
+  .map((file) => require(`./entities/${file}`).default as Type<any>);
 
 @Module({
   imports: [
   DatabaseModule.forRoot({ entities: ALL_ENTITIES}),
-  TypeOrmModule.forFeature([ContactEntity]),
+  TypeOrmModule.forFeature([User]),
+
   ],
-  providers: [ItemsService],
-  exports : [ItemsService],
+  providers: [UserService],
+  exports : [UserService],
   controllers: []
 })
 export class EntityModule {}
